@@ -1,0 +1,3149 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>টেক্সটাইল লিমিটেড.কম - আলটিমেট গার্মেন্টস ম্যানেজমেন্ট সিস্টেম</title>
+    
+    <!-- PWA ম্যানিফেস্ট -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3c72">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- ফন্ট ও লাইব্রেরি -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/bn.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3c72;
+            --primary-dark: #0f2744;
+            --primary-light: #2a5298;
+            --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --secondary: #ff6b6b;
+            --accent: #ffd93d;
+            --success: #4caf50;
+            --success-dark: #388e3c;
+            --danger: #f44336;
+            --danger-dark: #d32f2f;
+            --warning: #ff9800;
+            --warning-dark: #ed6c02;
+            --info: #2196f3;
+            --info-dark: #1976d2;
+            --dark: #263238;
+            --dark-light: #37474f;
+            --light: #f5f7fa;
+            --white: #ffffff;
+            --gray: #9e9e9e;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-hover: 0 12px 32px rgba(0,0,0,0.15);
+            --radius-sm: 12px;
+            --radius: 16px;
+            --radius-lg: 24px;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: var(--light);
+            min-height: 100vh;
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--dark);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* অ্যানিমেশন */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .animated {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* কার্ড ডিজাইন */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            font-size: 1.2rem;
+        }
+
+        /* বাটন */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Hind Siliguri', sans-serif;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #ed6c02 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-lg {
+            padding: 14px 28px;
+            font-size: 1rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* ইনপুট ফিল্ড */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-family: 'Hind Siliguri', sans-serif;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+
+        /* লগইন পেজ */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-page::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.05) 0px,
+                rgba(255,255,255,0.05) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(-10%, -10%) rotate(0deg); }
+            100% { transform: translate(-30%, -30%) rotate(10deg); }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeIn 0.6s ease;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-header .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 24px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: white;
+            box-shadow: var(--shadow-lg);
+            animation: pulse 2s infinite;
+        }
+
+        .login-header h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .login-header p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .login-tab {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--light);
+            padding: 5px;
+            border-radius: 50px;
+        }
+
+        .login-tab button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-tab button.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        /* ড্যাশবোর্ড */
+        .dashboard {
+            min-height: 100vh;
+            display: none;
+            width: 100%;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        /* হেডার */
+        .dashboard-header {
+            background: var(--white);
+            color: var(--dark);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--light);
+            border: none;
+            color: var(--primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: rotate(10deg);
+        }
+
+        /* নিচের মেনু */
+        .bottom-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 10px 22px;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.05);
+            z-index: 100;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .bottom-menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--gray);
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .bottom-menu-item i {
+            font-size: 1.3rem;
+            transition: all 0.3s;
+        }
+
+        .bottom-menu-item.active {
+            color: var(--primary);
+            background: rgba(30, 60, 114, 0.1);
+        }
+
+        .bottom-menu-item.active i {
+            transform: translateY(-2px);
+        }
+
+        /* কন্টেন্ট এরিয়া */
+        .content-area {
+            padding: 16px;
+        }
+
+        /* স্ট্যাটাস গ্রিড */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .stat-info p {
+            color: var(--gray);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* টাইমলাইন */
+        .timeline-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .current-time {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin: 10px 0;
+            font-family: monospace;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            color: var(--dark);
+            text-align: center;
+            background: var(--light);
+            padding: 12px;
+            border-radius: 40px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+
+        /* অ্যাটেনডেন্স অ্যাকশন */
+        .attendance-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .action-btn {
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius);
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .action-btn i {
+            font-size: 1.8rem;
+        }
+
+        .action-btn.check-in { 
+            color: var(--success);
+            border-bottom: 3px solid var(--success);
+        }
+        .action-btn.leave { 
+            color: var(--danger);
+            border-bottom: 3px solid var(--danger);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* প্রোডাক্ট গ্রিড */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .product-stock {
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        /* নোটিফিকেশন বার */
+        .notice-bar {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notice-bar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: shimmer 10s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .notice-bar i {
+            font-size: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .notice-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .notice-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .notice-content p {
+            font-size: 0.85rem;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        /* টেবিল */
+        .table-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 8px;
+            background: var(--light);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+        }
+
+        /* ব্যাজ */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-success { background: #e8f5e9; color: var(--success-dark); }
+        .badge-warning { background: #fff3e0; color: var(--warning-dark); }
+        .badge-danger { background: #ffebee; color: var(--danger-dark); }
+        .badge-info { background: #e3f2fd; color: var(--info-dark); }
+        .badge-primary { background: #e8eaf6; color: var(--primary); }
+
+        /* প্রোফাইল */
+        .profile-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 24px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-id {
+            color: var(--gray);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed var(--border);
+        }
+
+        .profile-stat .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .profile-stat .label {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        /* চার্ট */
+        .chart-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            height: 250px;
+        }
+
+        /* ফিল্টার */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-family: 'Hind Siliguri', sans-serif;
+            background: var(--white);
+        }
+
+        /* মোডাল */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: var(--light);
+            color: var(--danger);
+        }
+
+        /* ট্যাব */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* টোস্ট নোটিফিকেশন */
+        .notification-container {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 9999;
+            width: calc(100% - 32px);
+            max-width: 300px;
+        }
+
+        .notification {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .notification.success { border-left-color: var(--success); }
+        .notification.error { border-left-color: var(--danger); }
+        .notification.warning { border-left-color: var(--warning); }
+        .notification.info { border-left-color: var(--info); }
+
+        /* লোডিং */
+        .loading {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--light);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* প্রগ্রেস বার */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--light);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        /* রেসপনসিভ */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .attendance-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .filter-bar input,
+            .filter-bar select {
+                width: 100%;
+            }
+        }
+
+        /* স্ক্রলবার */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- লগইন পেজ -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h1>টেক্সটাইল লিমিটেড</h1>
+                    <p>আলটিমেট গার্মেন্টস ম্যানেজমেন্ট সিস্টেম</p>
+                </div>
+
+                <div class="login-tab">
+                    <button class="active" onclick="switchLoginTab('worker')">শ্রমিক</button>
+                    <button onclick="switchLoginTab('owner')">মালিক</button>
+                </div>
+
+                <!-- শ্রমিক লগইন -->
+                <div id="workerLoginForm">
+                    <div class="form-group">
+                        <label class="form-label">শ্রমিক আইডি</label>
+                        <input type="text" class="form-control" id="workerId" placeholder="আপনার ৮ ডিজিটের আইডি দিন" maxlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">পাসওয়ার্ড</label>
+                        <input type="password" class="form-control" id="workerPassword" placeholder="******">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="workerLogin()">
+                        <i class="fas fa-sign-in-alt"></i> লগইন করুন
+                    </button>
+                </div>
+
+                <!-- মালিক লগইন -->
+                <div id="ownerLoginForm" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">ইউজারনেম</label>
+                        <input type="text" class="form-control" id="ownerUsername" placeholder="tanvir">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">পাসওয়ার্ড</label>
+                        <input type="password" class="form-control" id="ownerPassword" placeholder="******">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="ownerLogin()">
+                        <i class="fas fa-sign-in-alt"></i> লগইন করুন
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- শ্রমিক ড্যাশবোর্ড -->
+    <div class="dashboard" id="workerDashboard">
+        <div class="dashboard-header">
+            <div class="header-left">
+                <div class="header-title">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="workerDisplayName"></span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="showNotificationPanel()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn" onclick="workerLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area" id="workerContent">
+            <!-- হোম ট্যাব -->
+            <div id="worker-home-tab" class="tab-content active">
+                <!-- নোটিফিকেশন বার -->
+                <div class="notice-bar">
+                    <i class="fas fa-bullhorn"></i>
+                    <div class="notice-content">
+                        <h4>📢 গুরুত্বপূর্ণ নোটিশ</h4>
+                        <p>• ২ দিন লেট = হাজিরা বোনাস কর্তন (১০০০ টাকা)<br>• ৭ দিন লেট = ১ দিনের বেতন কর্তন<br>• শুক্রবার ছুটির দিন<br>• ওভারটাইম রেট: ২০০ টাকা/ঘন্টা</p>
+                    </div>
+                </div>
+
+                <!-- প্রোফাইল সারাংশ -->
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-name" id="workerFullName"></div>
+                    <div class="profile-id" id="workerIdDisplay"></div>
+                    <div class="profile-id" id="workerDepartment"></div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="value" id="workerPresent">0</div>
+                            <div class="label">উপস্থিত</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value" id="workerLate">0</div>
+                            <div class="label">লেট</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value" id="workerAbsent">0</div>
+                            <div class="label">অনুপস্থিত</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- টাইমলাইন -->
+                <div class="timeline-card">
+                    <div class="current-time" id="currentTime">--:--:--</div>
+                    <div class="timer" id="workTimer">কাজের সময়: ০০:০০:০০</div>
+                    
+                    <div class="attendance-actions">
+                        <button class="action-btn check-in" onclick="workerCheckIn()">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>চেক-ইন</span>
+                        </button>
+                        <button class="action-btn leave" onclick="workerLeave()">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>ছুটি</span>
+                        </button>
+                    </div>
+
+                    <div class="stats-grid" style="margin-top: 12px;">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #E3F2FD; color: var(--info);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayCheckIn">--:--</h3>
+                                <p>আজকের চেক-ইন</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #FFF3E0; color: var(--warning);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayCheckOut">--:--</h3>
+                                <p>আজকের চেক-আউট</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #E8F5E9; color: var(--success);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayOT">০ ঘ</h3>
+                                <p>আজকের ওভারটাইম</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #FFEBEE; color: var(--danger);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayStatus">--</h3>
+                                <p>আজকের স্ট্যাটাস</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- বেতন ক্যালকুলেটর -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calculator"></i>
+                            বেতন ক্যালকুলেটর
+                        </h3>
+                        <button class="btn btn-sm btn-primary" onclick="calculateSalary()">
+                            <i class="fas fa-sync-alt"></i> রিফ্রেশ
+                        </button>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>মাসিক বেতন</p>
+                                <h3 id="baseSalary">৳ ০</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>হাজিরা বোনাস</p>
+                                <h3 id="bonusAmount">৳ ০</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>ওভারটাইম</p>
+                                <h3 id="otAmount">৳ ০</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>কর্তন</p>
+                                <h3 id="deductionAmount">৳ ০</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 12px; padding: 12px; background: var(--light); border-radius: var(--radius);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 1rem;">মোট প্রদেয়</span>
+                            <h2 id="totalSalary" style="color: var(--primary); font-size: 1.5rem;">৳ ০</h2>
+                        </div>
+                        <div class="progress-bar" style="margin-top: 8px;">
+                            <div class="progress-fill" id="salaryProgress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- হাজিরা ট্যাব -->
+            <div id="worker-attendance-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            ক্যালেন্ডার ভিউ
+                        </h3>
+                        <div class="calendar-nav">
+                            <button class="btn btn-sm btn-outline" onclick="changeMonth(-1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span id="currentMonth" style="font-weight: 600; margin: 0 8px; font-size: 0.9rem;"></span>
+                            <button class="btn btn-sm btn-outline" onclick="changeMonth(1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid" id="workerCalendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 12px;">
+                        <!-- ক্যালেন্ডার জেনারেট হবে JS দিয়ে -->
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                        <span class="badge badge-success">উপস্থিত</span>
+                        <span class="badge badge-warning">লেট</span>
+                        <span class="badge badge-danger">অনুপস্থিত</span>
+                        <span class="badge badge-info">ছুটি</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-history"></i>
+                            এই মাসের ইতিহাস
+                        </h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>তারিখ</th>
+                                    <th>দিন</th>
+                                    <th>স্ট্যাটাস</th>
+                                    <th>প্রবেশ</th>
+                                    <th>প্রস্থান</th>
+                                    <th>ওভারটাইম</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workerHistoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- বেতন ট্যাব -->
+            <div id="worker-salary-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line"></i>
+                            বেতন বিশ্লেষণ
+                        </h3>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="workerSalaryChart"></canvas>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>এই মাসের বেতন</p>
+                                <h3 id="monthlySalary">৳ ০</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>গত মাসের বেতন</p>
+                                <h3 id="lastMonthSalary">৳ ০</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>মোট উপার্জন</p>
+                                <h3 id="totalEarning">৳ ০</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>গড় বেতন</p>
+                                <h3 id="avgSalary">৳ ০</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-invoice"></i>
+                            বেতন বিবরণী
+                        </h3>
+                        <button class="btn btn-sm btn-success" onclick="downloadSalarySlip()">
+                            <i class="fas fa-download"></i> ডাউনলোড
+                        </button>
+                    </div>
+                    
+                    <div id="salaryDetails"></div>
+                </div>
+            </div>
+
+            <!-- প্রোডাক্ট ট্যাব -->
+            <div id="worker-products-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-tshirt"></i>
+                            আমাদের প্রোডাক্ট
+                        </h3>
+                        <div class="filter-bar" style="margin: 0;">
+                            <input type="text" id="productSearch" placeholder="🔍 প্রোডাক্ট খুঁজুন..." onkeyup="searchProducts()">
+                        </div>
+                    </div>
+                    
+                    <div class="products-grid" id="productsGrid">
+                        <!-- প্রোডাক্ট ডায়নামিক লোড হবে -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-shopping-cart"></i>
+                            অর্ডার ইতিহাস
+                        </h3>
+                    </div>
+                    <div id="orderHistory"></div>
+                </div>
+            </div>
+
+            <!-- প্রোফাইল ট্যাব -->
+            <div id="worker-profile-tab" class="tab-content">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-name" id="profileName"></div>
+                    <div class="profile-id" id="profileId"></div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="value" id="profilePresent">0</div>
+                            <div class="label">উপস্থিত</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value" id="profileLate">0</div>
+                            <div class="label">লেট</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="value" id="profileAbsent">0</div>
+                            <div class="label">অনুপস্থিত</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-id-card"></i>
+                            ব্যক্তিগত তথ্য
+                        </h3>
+                    </div>
+                    
+                    <div style="display: grid; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--light); border-radius: var(--radius-sm);">
+                            <span>পদবী</span>
+                            <span id="profilePosition" style="font-weight: 600;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--light); border-radius: var(--radius-sm);">
+                            <span>বিভাগ</span>
+                            <span id="profileDept" style="font-weight: 600;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--light); border-radius: var(--radius-sm);">
+                            <span>যোগদানের তারিখ</span>
+                            <span id="profileJoin" style="font-weight: 600;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--light); border-radius: var(--radius-sm);">
+                            <span>মোবাইল</span>
+                            <span id="profilePhone" style="font-weight: 600;">০১৭******</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--light); border-radius: var(--radius-sm);">
+                            <span>ঠিকানা</span>
+                            <span id="profileAddress" style="font-weight: 600;">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-cog"></i>
+                            সেটিংস
+                        </h3>
+                    </div>
+                    
+                    <div style="display: grid; gap: 8px;">
+                        <button class="btn btn-outline btn-block" onclick="changePassword()">
+                            <i class="fas fa-key"></i> পাসওয়ার্ড পরিবর্তন
+                        </button>
+                        <button class="btn btn-outline btn-block" onclick="updateProfile()">
+                            <i class="fas fa-edit"></i> প্রোফাইল আপডেট
+                        </button>
+                        <button class="btn btn-outline btn-block" onclick="exportMyData()">
+                            <i class="fas fa-download"></i> আমার ডাটা ডাউনলোড
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- নিচের মেনু (শ্রমিক) -->
+        <div class="bottom-menu">
+            <div class="bottom-menu-item active" onclick="showWorkerTab('home')">
+                <i class="fas fa-home"></i>
+                <span>হোম</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showWorkerTab('attendance')">
+                <i class="fas fa-calendar-check"></i>
+                <span>হাজিরা</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showWorkerTab('salary')">
+                <i class="fas fa-money-bill"></i>
+                <span>বেতন</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showWorkerTab('products')">
+                <i class="fas fa-tshirt"></i>
+                <span>প্রোডাক্ট</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showWorkerTab('profile')">
+                <i class="fas fa-user"></i>
+                <span>প্রোফাইল</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- মালিক ড্যাশবোর্ড -->
+    <div class="dashboard" id="ownerDashboard">
+        <div class="dashboard-header">
+            <div class="header-left">
+                <div class="header-title">
+                    <i class="fas fa-crown"></i>
+                    <span>এডমিন প্যানেল</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn" onclick="ownerLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area" id="ownerContent">
+            <!-- ড্যাশবোর্ড ট্যাব -->
+            <div id="owner-dashboard-tab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #E3F2FD; color: var(--info);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalEmployees">0</h3>
+                            <p>মোট কর্মী</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #E8F5E9; color: var(--success);">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="todayPresent">0</h3>
+                            <p>আজ উপস্থিত</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #FFF3E0; color: var(--warning);">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="todayLate">0</h3>
+                            <p>আজ লেট</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #FFEBEE; color: var(--danger);">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="todayAbsent">0</h3>
+                            <p>আজ অনুপস্থিত</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="ownerChart"></canvas>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-tasks"></i>
+                            দ্রুত অ্যাকশন
+                        </h3>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                        <button class="btn btn-primary" onclick="showAddEmployeeModal()">
+                            <i class="fas fa-user-plus"></i> নতুন কর্মী
+                        </button>
+                        <button class="btn btn-success" onclick="exportAllData()">
+                            <i class="fas fa-download"></i> এক্সপোর্ট
+                        </button>
+                        <button class="btn btn-info" onclick="generateReport()">
+                            <i class="fas fa-file-pdf"></i> রিপোর্ট
+                        </button>
+                        <button class="btn btn-warning" onclick="manageSettings()">
+                            <i class="fas fa-sliders-h"></i> সেটিংস
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-search"></i>
+                            কর্মী সার্চ
+                        </h3>
+                    </div>
+                    
+                    <div class="filter-bar">
+                        <input type="text" id="adminSearch" placeholder="🔍 আইডি, নাম বা বিভাগ..." onkeyup="searchEmployees()">
+                    </div>
+                    
+                    <div id="searchResults"></div>
+                </div>
+            </div>
+
+            <!-- কর্মী তালিকা ট্যাব -->
+            <div id="owner-employees-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-list"></i>
+                            সকল কর্মী
+                        </h3>
+                        <button class="btn btn-sm btn-success" onclick="showAddEmployeeModal()">
+                            <i class="fas fa-plus"></i> নতুন
+                        </button>
+                    </div>
+                    
+                    <div class="filter-bar">
+                        <input type="text" id="empSearch" placeholder="🔍 নাম বা আইডি..." onkeyup="filterEmployees()">
+                        <select id="deptFilter" onchange="filterEmployees()">
+                            <option value="">সব বিভাগ</option>
+                            <option value="সেলাই">সেলাই</option>
+                            <option value="কাটিং">কাটিং</option>
+                            <option value="ফিনিশিং">ফিনিশিং</option>
+                            <option value="প্যাকেজিং">প্যাকেজিং</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>আইডি</th>
+                                    <th>নাম</th>
+                                    <th>পদবী</th>
+                                    <th>বিভাগ</th>
+                                    <th>বেতন</th>
+                                    <th>স্ট্যাটাস</th>
+                                    <th>অ্যাকশন</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employeesList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- উপস্থিতি ট্যাব -->
+            <div id="owner-attendance-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-check"></i>
+                            আজকের উপস্থিতি
+                        </h3>
+                        <button class="btn btn-sm btn-primary" onclick="exportTodayAttendance()">
+                            <i class="fas fa-download"></i> এক্সপোর্ট
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>নাম</th>
+                                    <th>বিভাগ</th>
+                                    <th>স্ট্যাটাস</th>
+                                    <th>প্রবেশ</th>
+                                    <th>প্রস্থান</th>
+                                    <th>ওভারটাইম</th>
+                                    <th>অ্যাকশন</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-history"></i>
+                            উপস্থিতি ইতিহাস
+                        </h3>
+                        <input type="month" id="historyMonth" class="form-control" style="width: auto;" onchange="loadAttendanceHistory()">
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>তারিখ</th>
+                                    <th>নাম</th>
+                                    <th>স্ট্যাটাস</th>
+                                    <th>প্রবেশ</th>
+                                    <th>প্রস্থান</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- প্রোডাক্ট ট্যাব -->
+            <div id="owner-products-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-boxes"></i>
+                            প্রোডাক্ট ম্যানেজমেন্ট
+                        </h3>
+                        <button class="btn btn-sm btn-success" onclick="showAddProductModal()">
+                            <i class="fas fa-plus"></i> নতুন
+                        </button>
+                    </div>
+                    
+                    <div class="products-grid" id="adminProductsGrid">
+                        <!-- প্রোডাক্ট লিস্ট -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-bar"></i>
+                            প্রোডাক্ট স্ট্যাটিস্টিক্স
+                        </h3>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="productsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- রিপোর্ট ট্যাব -->
+            <div id="owner-reports-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-alt"></i>
+                            রিপোর্ট জেনারেটর
+                        </h3>
+                    </div>
+                    
+                    <div style="display: grid; gap: 12px;">
+                        <div class="form-group">
+                            <label class="form-label">রিপোর্ট টাইপ</label>
+                            <select class="form-control" id="reportType">
+                                <option value="attendance">উপস্থিতি রিপোর্ট</option>
+                                <option value="salary">বেতন রিপোর্ট</option>
+                                <option value="overtime">ওভারটাইম রিপোর্ট</option>
+                                <option value="leave">ছুটির রিপোর্ট</option>
+                                <option value="product">প্রোডাক্ট রিপোর্ট</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">সময়সীমা</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="date" class="form-control" id="startDate">
+                                <input type="date" class="form-control" id="endDate">
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="generateCustomReport()">
+                            <i class="fas fa-file-pdf"></i> রিপোর্ট জেনারেট করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie"></i>
+                            পরিসংখ্যান
+                        </h3>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="reportsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- নিচের মেনু (মালিক) -->
+        <div class="bottom-menu">
+            <div class="bottom-menu-item active" onclick="showOwnerTab('dashboard')">
+                <i class="fas fa-home"></i>
+                <span>হোম</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showOwnerTab('employees')">
+                <i class="fas fa-users"></i>
+                <span>কর্মী</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showOwnerTab('attendance')">
+                <i class="fas fa-calendar-check"></i>
+                <span>উপস্থিতি</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showOwnerTab('products')">
+                <i class="fas fa-tshirt"></i>
+                <span>প্রোডাক্ট</span>
+            </div>
+            <div class="bottom-menu-item" onclick="showOwnerTab('reports')">
+                <i class="fas fa-chart-bar"></i>
+                <span>রিপোর্ট</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- মোডালসমূহ -->
+    <div class="modal" id="addEmployeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> নতুন কর্মী যোগ করুন</h3>
+                <button class="close-modal" onclick="closeModal('addEmployeeModal')">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">নাম *</label>
+                <input type="text" class="form-control" id="empName" placeholder="কর্মীর পুরো নাম">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">পদবী *</label>
+                <input type="text" class="form-control" id="empPosition" placeholder="যেমন: সুপারভাইজার">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">বিভাগ</label>
+                <select class="form-control" id="empDepartment">
+                    <option value="সেলাই">সেলাই</option>
+                    <option value="কাটিং">কাটিং</option>
+                    <option value="ফিনিশিং">ফিনিশিং</option>
+                    <option value="প্যাকেজিং">প্যাকেজিং</option>
+                    <option value="কোয়ালিটি">কোয়ালিটি</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">মাসিক বেতন *</label>
+                <input type="number" class="form-control" id="empSalary" placeholder="যেমন: 25000">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">মোবাইল নম্বর</label>
+                <input type="text" class="form-control" id="empPhone" placeholder="০১৭xxxxxxxx">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">ঠিকানা</label>
+                <textarea class="form-control" id="empAddress" rows="2"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">পাসওয়ার্ড</label>
+                <input type="text" class="form-control" id="empPassword" value="123456">
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="saveEmployee()">
+                <i class="fas fa-save"></i> সংরক্ষণ করুন
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-box"></i> নতুন প্রোডাক্ট</h3>
+                <button class="close-modal" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">প্রোডাক্ট নাম</label>
+                <input type="text" class="form-control" id="productName">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">মূল্য</label>
+                <input type="number" class="form-control" id="productPrice">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">পরিমাণ</label>
+                <input type="number" class="form-control" id="productQuantity">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">ছবি</label>
+                <select class="form-control" id="productImage">
+                    <option value="👕">👕 টি-শার্ট</option>
+                    <option value="👔">👔 শার্ট</option>
+                    <option value="👖">👖 প্যান্ট</option>
+                    <option value="🧥">🧥 জ্যাকেট</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="saveProduct()">
+                <i class="fas fa-save"></i> সংরক্ষণ
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sliders-h"></i> সেটিংস</h3>
+                <button class="close-modal" onclick="closeModal('settingsModal')">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">কাজ শুরু হওয়ার সময়</label>
+                <input type="time" class="form-control" id="workStart" value="08:00">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">কাজ শেষ হওয়ার সময়</label>
+                <input type="time" class="form-control" id="workEnd" value="17:00">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">ওভারটাইম রেট (প্রতি ঘন্টা)</label>
+                <input type="number" class="form-control" id="otRate" value="200">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">হাজিরা বোনাস</label>
+                <input type="number" class="form-control" id="bonusAmount" value="1000">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">লেটের জন্য বোনাস কর্তন (দিন)</label>
+                <input type="number" class="form-control" id="latePenalty" value="2">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">লেটের জন্য বেতন কর্তন (দিন)</label>
+                <input type="number" class="form-control" id="lateSalaryCut" value="7">
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="saveSettings()">
+                <i class="fas fa-save"></i> সংরক্ষণ
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bell"></i> নোটিফিকেশন</h3>
+                <button class="close-modal" onclick="closeModal('notificationModal')">&times;</button>
+            </div>
+            
+            <div id="notificationsList" style="max-height: 400px; overflow-y: auto;">
+                <!-- নোটিফিকেশন লিস্ট -->
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script>
+        // গ্লোবাল ভেরিয়েবল
+        let appData = {
+            employees: [],
+            attendance: [],
+            products: [],
+            notifications: [],
+            settings: {
+                workStart: '08:00',
+                workEnd: '17:00',
+                overtimeRate: 200,
+                bonusAmount: 1000,
+                latePenaltyDays: 2,
+                lateSalaryCutDays: 7
+            }
+        };
+
+        let currentUser = null;
+        let currentWorkerMonth = moment();
+        let timerInterval = null;
+        let workStartTime = null;
+        let charts = {};
+
+        // মালিকদের তালিকা
+        const owners = [
+            { username: 'tanvir', password: 'admin123', name: 'তানভীর', role: 'সিইও' },
+            { username: 'rahim', password: 'admin456', name: 'রহিম', role: 'ম্যানেজার' }
+        ];
+
+        // ========== ডাটা ম্যানেজমেন্ট ==========
+        function loadData() {
+            const saved = localStorage.getItem('textile_ultimate_data');
+            if (saved) {
+                appData = JSON.parse(saved);
+            } else {
+                // ডিফল্ট ডাটা
+                appData.employees = [
+                    { 
+                        id: 'EMP001', 
+                        name: 'করিম মিয়া', 
+                        password: '123456', 
+                        position: 'অপারেটর', 
+                        department: 'সেলাই', 
+                        salary: 25000,
+                        phone: '01711111111',
+                        address: 'গাজীপুর',
+                        joinDate: '2024-01-01'
+                    },
+                    { 
+                        id: 'EMP002', 
+                        name: 'রহিমা বেগম', 
+                        password: '123456', 
+                        position: 'সুপারভাইজার', 
+                        department: 'কাটিং', 
+                        salary: 35000,
+                        phone: '01722222222',
+                        address: 'টঙ্গী',
+                        joinDate: '2024-01-15'
+                    },
+                    { 
+                        id: 'EMP003', 
+                        name: 'জব্বার মিয়া', 
+                        password: '123456', 
+                        position: 'অপারেটর', 
+                        department: 'ফিনিশিং', 
+                        salary: 22000,
+                        phone: '01733333333',
+                        address: 'সাভার',
+                        joinDate: '2024-02-01'
+                    }
+                ];
+                
+                appData.products = [
+                    { id: 1, name: 'টি-শার্ট', price: 350, quantity: 500, image: '👕' },
+                    { id: 2, name: 'শার্ট', price: 650, quantity: 300, image: '👔' },
+                    { id: 3, name: 'প্যান্ট', price: 850, quantity: 200, image: '👖' },
+                    { id: 4, name: 'জিন্স', price: 1200, quantity: 150, image: '👖' }
+                ];
+                
+                appData.notifications = [
+                    { id: 1, title: 'স্বাগতম', message: 'সিস্টেম চালু হয়েছে', date: moment().format('YYYY-MM-DD'), type: 'info' }
+                ];
+                
+                // ডামি অ্যাটেনডেন্স ডাটা
+                for (let i = 0; i < 30; i++) {
+                    const date = moment().subtract(i, 'days').format('YYYY-MM-DD');
+                    if (moment(date).day() !== 5) { // শুক্রবার বাদে
+                        appData.employees.forEach(emp => {
+                            const random = Math.random();
+                            if (random > 0.2) {
+                                appData.attendance.push({
+                                    id: Date.now() + i + emp.id,
+                                    employeeId: emp.id,
+                                    employeeName: emp.name,
+                                    date: date,
+                                    checkIn: '08:' + Math.floor(Math.random() * 30).toString().padStart(2,'0') + ':00',
+                                    checkOut: '17:' + Math.floor(Math.random() * 30).toString().padStart(2,'0') + ':00',
+                                    isLate: random < 0.3,
+                                    overtime: random > 0.8 ? 1 : 0,
+                                    status: 'present'
+                                });
+                            }
+                        });
+                    }
+                }
+                
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('textile_ultimate_data', JSON.stringify(appData));
+        }
+
+        // ========== নোটিফিকেশন ==========
+        function showNotification(msg, type = 'success') {
+            const container = document.getElementById('notificationContainer');
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i> ${msg}`;
+            container.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+
+        function addNotification(title, message, type = 'info') {
+            const notif = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                date: moment().format('YYYY-MM-DD HH:mm'),
+                type: type,
+                read: false
+            };
+            appData.notifications.push(notif);
+            saveData();
+            updateNotificationBadge();
+        }
+
+        function updateNotificationBadge() {
+            const unread = appData.notifications.filter(n => !n.read).length;
+            // ব্যাজ আপডেট করা যেতে পারে
+        }
+
+        // ========== লগইন ফাংশন ==========
+        function switchLoginTab(type) {
+            document.querySelectorAll('.login-tab button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('workerLoginForm').style.display = type === 'worker' ? 'block' : 'none';
+            document.getElementById('ownerLoginForm').style.display = type === 'owner' ? 'block' : 'none';
+        }
+
+        function workerLogin() {
+            const id = document.getElementById('workerId').value;
+            const password = document.getElementById('workerPassword').value;
+            
+            const employee = appData.employees.find(e => e.id === id && e.password === password);
+            
+            if (employee) {
+                currentUser = { type: 'worker', data: employee };
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('workerDashboard').style.display = 'block';
+                
+                // ইউজার ইনফো আপডেট
+                updateWorkerUI();
+                startTimer();
+                updateWorkerDashboard();
+                
+                addNotification('লগইন সফল', `${employee.name} লগইন করেছেন`, 'success');
+                showNotification('স্বাগতম ' + employee.name);
+            } else {
+                showNotification('ভুল আইডি বা পাসওয়ার্ড!', 'error');
+            }
+        }
+
+        function ownerLogin() {
+            const username = document.getElementById('ownerUsername').value;
+            const password = document.getElementById('ownerPassword').value;
+            
+            const owner = owners.find(o => o.username === username && o.password === password);
+            
+            if (owner) {
+                currentUser = { type: 'owner', data: owner };
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('ownerDashboard').style.display = 'block';
+                
+                updateOwnerDashboard();
+                addNotification('এডমিন লগইন', `${owner.name} লগইন করেছেন`, 'info');
+                showNotification('স্বাগতম ' + owner.name);
+            } else {
+                showNotification('ভুল ইউজারনেম বা পাসওয়ার্ড!', 'error');
+            }
+        }
+
+        // ========== শ্রমিক ফাংশন ==========
+        function updateWorkerUI() {
+            const emp = currentUser.data;
+            document.getElementById('workerDisplayName').innerText = emp.name;
+            document.getElementById('workerFullName').innerText = emp.name;
+            document.getElementById('workerIdDisplay').innerText = emp.id;
+            document.getElementById('workerDepartment').innerText = emp.department;
+            document.getElementById('baseSalary').innerText = `৳ ${emp.salary}`;
+            
+            document.getElementById('profileName').innerText = emp.name;
+            document.getElementById('profileId').innerText = emp.id;
+            document.getElementById('profilePosition').innerText = emp.position;
+            document.getElementById('profileDept').innerText = emp.department;
+            document.getElementById('profileJoin').innerText = moment(emp.joinDate).format('DD MMMM YYYY');
+            document.getElementById('profilePhone').innerText = emp.phone || '০১৭xxxxxxxx';
+            document.getElementById('profileAddress').innerText = emp.address || '--';
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                document.getElementById('currentTime').innerText = now.toLocaleTimeString('bn-BD');
+                
+                if (workStartTime) {
+                    const diff = Math.floor((now - workStartTime) / 1000);
+                    const hours = Math.floor(diff / 3600);
+                    const minutes = Math.floor((diff % 3600) / 60);
+                    const seconds = diff % 60;
+                    document.getElementById('workTimer').innerHTML = `কাজের সময়: ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                }
+            }, 1000);
+        }
+
+        function workerCheckIn() {
+            const today = moment().format('YYYY-MM-DD');
+            const now = moment();
+            const workStart = moment(today + ' ' + appData.settings.workStart);
+            
+            const existing = appData.attendance.find(a => a.employeeId === currentUser.data.id && a.date === today);
+            
+            if (existing && existing.checkIn) {
+                showNotification('আজ ইতিমধ্যে চেক-ইন করেছেন!', 'warning');
+                return;
+            }
+            
+            const isLate = now.isAfter(workStart);
+            workStartTime = new Date();
+            
+            const attendance = {
+                id: Date.now(),
+                employeeId: currentUser.data.id,
+                employeeName: currentUser.data.name,
+                date: today,
+                checkIn: now.format('HH:mm:ss'),
+                checkOut: null,
+                isLate: isLate,
+                overtime: 0,
+                status: 'present'
+            };
+            
+            if (!existing) {
+                appData.attendance.push(attendance);
+            } else {
+                existing.checkIn = now.format('HH:mm:ss');
+                existing.isLate = isLate;
+            }
+            
+            saveData();
+            updateWorkerDashboard();
+            
+            document.getElementById('todayCheckIn').innerText = now.format('hh:mm A');
+            document.getElementById('todayStatus').innerText = isLate ? 'লেট' : 'উপস্থিত';
+            
+            addNotification('চেক-ইন', `${currentUser.data.name} ${isLate ? 'লেট' : 'সময়ে'} চেক-ইন করেছেন`, isLate ? 'warning' : 'success');
+            showNotification(isLate ? 'লেট চেক-ইন হয়েছে' : 'চেক-ইন সফল', isLate ? 'warning' : 'success');
+        }
+
+        // চেক-আউট ফাংশন শুধুমাত্র মালিকদের জন্য রাখা হয়েছে
+        function ownerCheckOut(empId) {
+            const today = moment().format('YYYY-MM-DD');
+            const now = moment();
+            const workEnd = moment(today + ' ' + appData.settings.workEnd);
+            
+            const attendance = appData.attendance.find(a => a.employeeId === empId && a.date === today);
+            
+            if (!attendance || !attendance.checkIn) {
+                showNotification('কর্মী আজ চেক-ইন করেননি!', 'error');
+                return;
+            }
+            
+            if (attendance.checkOut) {
+                showNotification('ইতিমধ্যে চেক-আউট করেছেন!', 'warning');
+                return;
+            }
+            
+            const checkOutTime = moment(today + ' ' + now.format('HH:mm:ss'));
+            let overtime = 0;
+            
+            if (checkOutTime.isAfter(workEnd)) {
+                overtime = Math.round(checkOutTime.diff(workEnd, 'hours', true) * 10) / 10;
+            }
+            
+            attendance.checkOut = now.format('HH:mm:ss');
+            attendance.overtime = overtime;
+            
+            saveData();
+            updateAttendanceTable();
+            updateOwnerDashboard();
+            
+            addNotification('চেক-আউট', `${attendance.employeeName} চেক-আউট করেছেন, ওভারটাইম: ${overtime} ঘন্টা`, 'info');
+            showNotification(`চেক-আউট সফল | ওভারটাইম: ${overtime} ঘন্টা`);
+        }
+
+        function workerLeave() {
+            const today = moment().format('YYYY-MM-DD');
+            const reason = prompt('ছুটির কারণ লিখুন:');
+            
+            if (!reason) return;
+            
+            const attendance = {
+                id: Date.now(),
+                employeeId: currentUser.data.id,
+                employeeName: currentUser.data.name,
+                date: today,
+                status: 'leave',
+                reason: reason,
+                checkIn: null,
+                checkOut: null
+            };
+            
+            appData.attendance.push(attendance);
+            saveData();
+            
+            updateWorkerDashboard();
+            addNotification('ছুটির আবেদন', `${currentUser.data.name} ছুটির আবেদন করেছেন: ${reason}`, 'info');
+            showNotification('ছুটির আবেদন জমা হয়েছে');
+        }
+
+        function updateWorkerDashboard() {
+            if (!currentUser || currentUser.type !== 'worker') return;
+            
+            const empId = currentUser.data.id;
+            const currentMonth = moment().format('YYYY-MM');
+            
+            const monthAttendance = appData.attendance.filter(a => a.employeeId === empId && a.date.startsWith(currentMonth));
+            
+            // স্ট্যাটাস ক্যালকুলেট
+            const present = monthAttendance.filter(a => a.status === 'present' && !a.isLate && a.checkIn).length;
+            const late = monthAttendance.filter(a => a.isLate).length;
+            const absent = monthAttendance.filter(a => a.status === 'absent' || (a.status === 'present' && !a.checkIn)).length;
+            const leave = monthAttendance.filter(a => a.status === 'leave').length;
+            
+            document.getElementById('workerPresent').innerText = present;
+            document.getElementById('workerLate').innerText = late;
+            document.getElementById('workerAbsent').innerText = absent + leave;
+            
+            document.getElementById('profilePresent').innerText = present;
+            document.getElementById('profileLate').innerText = late;
+            document.getElementById('profileAbsent').innerText = absent + leave;
+            
+            // বোনাস ও কর্তন ক্যালকুলেট
+            calculateSalary();
+            
+            // আজকের ডাটা
+            const today = moment().format('YYYY-MM-DD');
+            const todayAtt = appData.attendance.find(a => a.employeeId === empId && a.date === today);
+            
+            if (todayAtt) {
+                if (todayAtt.checkIn) {
+                    document.getElementById('todayCheckIn').innerText = moment(todayAtt.checkIn, 'HH:mm:ss').format('hh:mm A');
+                }
+                if (todayAtt.checkOut) {
+                    document.getElementById('todayCheckOut').innerText = moment(todayAtt.checkOut, 'HH:mm:ss').format('hh:mm A');
+                }
+                if (todayAtt.overtime) {
+                    document.getElementById('todayOT').innerText = todayAtt.overtime + ' ঘ';
+                }
+                document.getElementById('todayStatus').innerText = todayAtt.isLate ? 'লেট' : todayAtt.status === 'present' ? 'উপস্থিত' : 'ছুটি';
+            }
+            
+            // ক্যালেন্ডার আপডেট
+            generateWorkerCalendar();
+            
+            // ইতিহাস আপডেট
+            loadWorkerHistory();
+            
+            // বেতন চার্ট আপডেট
+            updateSalaryChart();
+        }
+
+        function generateWorkerCalendar() {
+            const calendar = document.getElementById('workerCalendar');
+            if (!calendar) return;
+            
+            const year = currentWorkerMonth.year();
+            const month = currentWorkerMonth.month();
+            const firstDay = moment([year, month, 1]);
+            const lastDay = moment([year, month, 1]).endOf('month');
+            
+            let html = '';
+            
+            // দিনের নাম
+            const dayNames = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
+            dayNames.forEach((day, i) => {
+                html += `<div style="text-align: center; padding: 6px; font-weight: 600; font-size: 0.8rem; color: ${i === 5 ? 'var(--danger)' : 'var(--primary)'};">${day}</div>`;
+            });
+            
+            // ফাঁকা ঘর
+            for (let i = 0; i < firstDay.day(); i++) {
+                html += '<div></div>';
+            }
+            
+            // তারিখ
+            for (let d = 1; d <= lastDay.date(); d++) {
+                const date = moment([year, month, d]).format('YYYY-MM-DD');
+                const attendance = appData.attendance.find(a => a.employeeId === currentUser?.data.id && a.date === date);
+                
+                let bgColor = 'var(--light)';
+                let color = 'var(--dark)';
+                
+                if (moment(date).day() === 5) {
+                    bgColor = '#ffebee';
+                    color = 'var(--danger-dark)';
+                }
+                
+                if (attendance) {
+                    if (attendance.status === 'present') {
+                        if (attendance.isLate) {
+                            bgColor = '#fff3e0';
+                            color = 'var(--warning-dark)';
+                        } else {
+                            bgColor = '#e8f5e9';
+                            color = 'var(--success-dark)';
+                        }
+                    } else if (attendance.status === 'leave') {
+                        bgColor = '#e3f2fd';
+                        color = 'var(--info-dark)';
+                    } else if (attendance.status === 'absent') {
+                        bgColor = '#ffebee';
+                        color = 'var(--danger-dark)';
+                    }
+                }
+                
+                html += `<div style="aspect-ratio: 1; background: ${bgColor}; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: ${color}; font-weight: ${date === moment().format('YYYY-MM-DD') ? '700' : '400'}; border: ${date === moment().format('YYYY-MM-DD') ? '1px solid var(--primary)' : 'none'};">${d}</div>`;
+            }
+            
+            calendar.innerHTML = html;
+            document.getElementById('currentMonth').innerText = currentWorkerMonth.format('MMMM YYYY');
+        }
+
+        function changeMonth(delta) {
+            currentWorkerMonth.add(delta, 'months');
+            generateWorkerCalendar();
+            loadWorkerHistory();
+        }
+
+        function loadWorkerHistory() {
+            const tbody = document.getElementById('workerHistoryTable');
+            if (!tbody) return;
+            
+            const month = currentWorkerMonth.format('YYYY-MM');
+            const attendance = appData.attendance
+                .filter(a => a.employeeId === currentUser?.data.id && a.date.startsWith(month))
+                .sort((a, b) => b.date.localeCompare(a.date));
+            
+            tbody.innerHTML = attendance.map(a => `
+                <tr>
+                    <td>${moment(a.date).format('DD MMM')}</td>
+                    <td>${moment(a.date).format('dddd')}</td>
+                    <td>
+                        <span class="badge ${a.isLate ? 'badge-warning' : a.status === 'present' ? 'badge-success' : a.status === 'leave' ? 'badge-info' : 'badge-danger'}">
+                            ${a.isLate ? 'লেট' : a.status === 'present' ? 'উপস্থিত' : a.status === 'leave' ? 'ছুটি' : 'অনুপস্থিত'}
+                        </span>
+                    </td>
+                    <td>${a.checkIn ? moment(a.checkIn, 'HH:mm:ss').format('hh:mm A') : '-'}</td>
+                    <td>${a.checkOut ? moment(a.checkOut, 'HH:mm:ss').format('hh:mm A') : '-'}</td>
+                    <td>${a.overtime || 0} ঘ</td>
+                </tr>
+            `).join('');
+        }
+
+        function calculateSalary() {
+            const empId = currentUser.data.id;
+            const currentMonth = moment().format('YYYY-MM');
+            
+            const monthAttendance = appData.attendance.filter(a => a.employeeId === empId && a.date.startsWith(currentMonth));
+            
+            const present = monthAttendance.filter(a => a.status === 'present' && !a.isLate && a.checkIn).length;
+            const late = monthAttendance.filter(a => a.isLate).length;
+            
+            // বোনাস ক্যালকুলেট
+            let bonus = appData.settings.bonusAmount;
+            if (late >= appData.settings.latePenaltyDays) {
+                bonus = 0;
+            }
+            
+            // কর্তন ক্যালকুলেট
+            let deduction = 0;
+            if (late >= appData.settings.lateSalaryCutDays) {
+                deduction = currentUser.data.salary / 26 * late;
+            }
+            
+            // ওভারটাইম ক্যালকুলেট
+            const totalOT = monthAttendance.reduce((sum, a) => sum + (a.overtime || 0), 0);
+            const otPay = totalOT * appData.settings.overtimeRate;
+            
+            // মোট বেতন
+            const baseSalary = currentUser.data.salary;
+            const total = baseSalary + bonus + otPay - deduction;
+            
+            document.getElementById('bonusAmount').innerText = `৳ ${bonus}`;
+            document.getElementById('otAmount').innerText = `৳ ${otPay}`;
+            document.getElementById('deductionAmount').innerText = `৳ ${Math.round(deduction)}`;
+            document.getElementById('totalSalary').innerText = `৳ ${Math.round(total)}`;
+            
+            // প্রগ্রেস বার
+            const progress = (total / (baseSalary + appData.settings.bonusAmount)) * 100;
+            document.getElementById('salaryProgress').style.width = Math.min(progress, 100) + '%';
+        }
+
+        function updateSalaryChart() {
+            const ctx = document.getElementById('workerSalaryChart')?.getContext('2d');
+            if (!ctx) return;
+            
+            if (charts.workerSalary) charts.workerSalary.destroy();
+            
+            // গত ৬ মাসের ডাটা
+            const months = [];
+            const salaries = [];
+            
+            for (let i = 5; i >= 0; i--) {
+                const month = moment().subtract(i, 'months').format('MMMM');
+                months.push(month);
+                
+                const monthData = appData.attendance.filter(a => 
+                    a.employeeId === currentUser.data.id && 
+                    a.date.startsWith(moment().subtract(i, 'months').format('YYYY-MM'))
+                );
+                
+                const present = monthData.filter(a => a.status === 'present' && !a.isLate).length;
+                const ot = monthData.reduce((sum, a) => sum + (a.overtime || 0), 0);
+                const salary = (present * currentUser.data.salary / 26) + (ot * appData.settings.overtimeRate);
+                
+                salaries.push(salary);
+            }
+            
+            charts.workerSalary = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'বেতন',
+                        data: salaries,
+                        borderColor: '#1e3c72',
+                        backgroundColor: 'rgba(30, 60, 114, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // প্রোডাক্ট ফাংশন
+        function updateProducts() {
+            const grid = document.getElementById('productsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = appData.products.map(p => `
+                <div class="product-card" onclick="viewProduct(${p.id})">
+                    <div class="product-icon">${p.image}</div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">৳ ${p.price}</div>
+                    <div class="product-stock">স্টক: ${p.quantity}</div>
+                </div>
+            `).join('');
+            
+            // এডমিন প্রোডাক্ট গ্রিড
+            const adminGrid = document.getElementById('adminProductsGrid');
+            if (adminGrid) {
+                adminGrid.innerHTML = appData.products.map(p => `
+                    <div class="product-card">
+                        <div class="product-icon">${p.image}</div>
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">৳ ${p.price}</div>
+                        <div class="product-stock">স্টক: ${p.quantity}</div>
+                        <div style="display: flex; gap: 5px; margin-top: 8px;">
+                            <button class="btn btn-sm btn-info" onclick="editProduct(${p.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('productSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('#productsGrid .product-card');
+            
+            cards.forEach(card => {
+                const name = card.querySelector('.product-name').innerText.toLowerCase();
+                card.style.display = name.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        // ========== মালিক ফাংশন ==========
+        function updateOwnerDashboard() {
+            const total = appData.employees.length;
+            const today = moment().format('YYYY-MM-DD');
+            
+            const todayAtt = appData.attendance.filter(a => a.date === today);
+            const present = todayAtt.filter(a => a.status === 'present' && !a.isLate && a.checkIn).length;
+            const late = todayAtt.filter(a => a.isLate).length;
+            const absent = total - todayAtt.length;
+            
+            document.getElementById('totalEmployees').innerText = total;
+            document.getElementById('todayPresent').innerText = present;
+            document.getElementById('todayLate').innerText = late;
+            document.getElementById('todayAbsent').innerText = absent;
+            
+            updateOwnerChart();
+            updateEmployeesList();
+            updateAttendanceTable();
+        }
+
+        function updateOwnerChart() {
+            const ctx = document.getElementById('ownerChart')?.getContext('2d');
+            if (!ctx) return;
+            
+            if (charts.owner) charts.owner.destroy();
+            
+            const last7Days = [];
+            const present = [];
+            const late = [];
+            const absent = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = moment().subtract(i, 'days').format('YYYY-MM-DD');
+                last7Days.push(moment(date).format('ddd'));
+                
+                const dayAtt = appData.attendance.filter(a => a.date === date);
+                present.push(dayAtt.filter(a => a.status === 'present' && !a.isLate).length);
+                late.push(dayAtt.filter(a => a.isLate).length);
+                absent.push(appData.employees.length - dayAtt.length);
+            }
+            
+            charts.owner = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: last7Days,
+                    datasets: [
+                        { label: 'উপস্থিত', data: present, backgroundColor: '#4caf50' },
+                        { label: 'লেট', data: late, backgroundColor: '#ff9800' },
+                        { label: 'অনুপস্থিত', data: absent, backgroundColor: '#f44336' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateEmployeesList() {
+            const tbody = document.getElementById('employeesList');
+            if (!tbody) return;
+            
+            tbody.innerHTML = appData.employees.map(emp => {
+                const todayAtt = appData.attendance.find(a => a.employeeId === emp.id && a.date === moment().format('YYYY-MM-DD'));
+                const status = todayAtt ? (todayAtt.isLate ? 'লেট' : 'উপস্থিত') : 'অনুপস্থিত';
+                const statusColor = todayAtt ? (todayAtt.isLate ? 'badge-warning' : 'badge-success') : 'badge-danger';
+                
+                return `
+                    <tr>
+                        <td>${emp.id}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.position}</td>
+                        <td>${emp.department}</td>
+                        <td>৳ ${emp.salary}</td>
+                        <td><span class="badge ${statusColor}">${status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info" onclick="viewEmployeeDetails('${emp.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="editEmployee('${emp.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee('${emp.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="ownerCheckOut('${emp.id}')">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterEmployees() {
+            const search = document.getElementById('empSearch')?.value.toLowerCase() || '';
+            const dept = document.getElementById('deptFilter')?.value || '';
+            
+            const rows = document.querySelectorAll('#employeesList tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const matchSearch = text.includes(search);
+                const matchDept = !dept || text.includes(dept.toLowerCase());
+                row.style.display = matchSearch && matchDept ? '' : 'none';
+            });
+        }
+
+        function updateAttendanceTable() {
+            const tbody = document.getElementById('attendanceTable');
+            if (!tbody) return;
+            
+            const today = moment().format('YYYY-MM-DD');
+            
+            tbody.innerHTML = appData.employees.map(emp => {
+                const att = appData.attendance.find(a => a.employeeId === emp.id && a.date === today) || { status: 'absent' };
+                const status = att.isLate ? 'লেট' : att.status === 'present' ? 'উপস্থিত' : 'অনুপস্থিত';
+                const statusColor = att.isLate ? 'badge-warning' : att.status === 'present' ? 'badge-success' : 'badge-danger';
+                
+                return `
+                    <tr>
+                        <td>${emp.name}</td>
+                        <td>${emp.department}</td>
+                        <td><span class="badge ${statusColor}">${status}</span></td>
+                        <td>${att.checkIn ? moment(att.checkIn, 'HH:mm:ss').format('hh:mm A') : '-'}</td>
+                        <td>${att.checkOut ? moment(att.checkOut, 'HH:mm:ss').format('hh:mm A') : '-'}</td>
+                        <td>${att.overtime || 0} ঘ</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="markAttendance('${emp.id}', 'present')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="markAttendance('${emp.id}', 'late')">
+                                <i class="fas fa-clock"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="markAttendance('${emp.id}', 'absent')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="btn btn-sm btn-info" onclick="ownerCheckOut('${emp.id}')">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function markAttendance(empId, status) {
+            const today = moment().format('YYYY-MM-DD');
+            const emp = appData.employees.find(e => e.id === empId);
+            
+            let attendance = appData.attendance.find(a => a.employeeId === empId && a.date === today);
+            
+            if (attendance) {
+                attendance.status = status === 'late' ? 'present' : status;
+                attendance.isLate = (status === 'late');
+                if (status !== 'absent') {
+                    attendance.checkIn = attendance.checkIn || moment().format('HH:mm:ss');
+                }
+            } else {
+                attendance = {
+                    id: Date.now(),
+                    employeeId: empId,
+                    employeeName: emp.name,
+                    date: today,
+                    status: status === 'late' ? 'present' : status,
+                    checkIn: status !== 'absent' ? moment().format('HH:mm:ss') : null,
+                    checkOut: null,
+                    isLate: (status === 'late'),
+                    overtime: 0
+                };
+                appData.attendance.push(attendance);
+            }
+            
+            saveData();
+            updateAttendanceTable();
+            updateOwnerDashboard();
+            showNotification('অ্যাটেনডেন্স আপডেট করা হয়েছে');
+        }
+
+        function loadAttendanceHistory() {
+            const month = document.getElementById('historyMonth').value;
+            if (!month) return;
+            
+            const tbody = document.getElementById('historyTable');
+            const attendance = appData.attendance
+                .filter(a => a.date.startsWith(month))
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .slice(0, 50);
+            
+            tbody.innerHTML = attendance.map(a => `
+                <tr>
+                    <td>${moment(a.date).format('DD MMM YYYY')}</td>
+                    <td>${a.employeeName}</td>
+                    <td><span class="badge ${a.isLate ? 'badge-warning' : a.status === 'present' ? 'badge-success' : a.status === 'leave' ? 'badge-info' : 'badge-danger'}">
+                        ${a.isLate ? 'লেট' : a.status === 'present' ? 'উপস্থিত' : a.status === 'leave' ? 'ছুটি' : 'অনুপস্থিত'}
+                    </span></td>
+                    <td>${a.checkIn ? moment(a.checkIn, 'HH:mm:ss').format('hh:mm A') : '-'}</td>
+                    <td>${a.checkOut ? moment(a.checkOut, 'HH:mm:ss').format('hh:mm A') : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // কর্মী ম্যানেজমেন্ট
+        function saveEmployee() {
+            const emp = {
+                id: 'EMP' + Math.floor(1000 + Math.random() * 9000),
+                name: document.getElementById('empName').value,
+                position: document.getElementById('empPosition').value,
+                department: document.getElementById('empDepartment').value,
+                salary: parseInt(document.getElementById('empSalary').value),
+                phone: document.getElementById('empPhone').value,
+                address: document.getElementById('empAddress').value,
+                password: document.getElementById('empPassword').value || '123456',
+                joinDate: moment().format('YYYY-MM-DD')
+            };
+            
+            if (!emp.name || !emp.position || !emp.salary) {
+                showNotification('সব প্রয়োজনীয় তথ্য দিন', 'error');
+                return;
+            }
+            
+            appData.employees.push(emp);
+            saveData();
+            
+            closeModal('addEmployeeModal');
+            updateEmployeesList();
+            updateOwnerDashboard();
+            
+            addNotification('নতুন কর্মী', `${emp.name} যোগ হয়েছে`, 'success');
+            showNotification('কর্মী যোগ করা হয়েছে');
+        }
+
+        function deleteEmployee(id) {
+            if (!confirm('কর্মীকে ডিলিট করবেন? সব ডাটা মুছে যাবে।')) return;
+            
+            appData.employees = appData.employees.filter(e => e.id !== id);
+            appData.attendance = appData.attendance.filter(a => a.employeeId !== id);
+            
+            saveData();
+            updateEmployeesList();
+            updateOwnerDashboard();
+            showNotification('কর্মী ডিলিট করা হয়েছে', 'warning');
+        }
+
+        function viewEmployeeDetails(id) {
+            const emp = appData.employees.find(e => e.id === id);
+            if (!emp) return;
+            
+            const attendance = appData.attendance.filter(a => a.employeeId === id);
+            const present = attendance.filter(a => a.status === 'present' && !a.isLate).length;
+            const late = attendance.filter(a => a.isLate).length;
+            const absent = attendance.filter(a => a.status === 'absent').length;
+            const totalOT = attendance.reduce((sum, a) => sum + (a.overtime || 0), 0);
+            
+            const details = `
+                👤 নাম: ${emp.name}
+                🆔 আইডি: ${emp.id}
+                💼 পদবী: ${emp.position}
+                📊 বিভাগ: ${emp.department}
+                💰 বেতন: ৳${emp.salary}
+                📱 মোবাইল: ${emp.phone || '--'}
+                🏠 ঠিকানা: ${emp.address || '--'}
+                📅 যোগদান: ${moment(emp.joinDate).format('DD MMM YYYY')}
+                
+                📈 পরিসংখ্যান:
+                ✅ উপস্থিত: ${present}
+                ⏰ লেট: ${late}
+                ❌ অনুপস্থিত: ${absent}
+                ⏱ ওভারটাইম: ${totalOT} ঘন্টা
+            `;
+            
+            alert(details);
+        }
+
+        // প্রোডাক্ট ম্যানেজমেন্ট
+        function showAddProductModal() {
+            document.getElementById('addProductModal').style.display = 'flex';
+        }
+
+        function saveProduct() {
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('productName').value,
+                price: parseInt(document.getElementById('productPrice').value),
+                quantity: parseInt(document.getElementById('productQuantity').value),
+                image: document.getElementById('productImage').value
+            };
+            
+            if (!product.name || !product.price) {
+                showNotification('সব তথ্য দিন', 'error');
+                return;
+            }
+            
+            appData.products.push(product);
+            saveData();
+            updateProducts();
+            closeModal('addProductModal');
+            showNotification('প্রোডাক্ট যোগ হয়েছে');
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('প্রোডাক্ট ডিলিট করবেন?')) return;
+            appData.products = appData.products.filter(p => p.id !== id);
+            saveData();
+            updateProducts();
+            showNotification('প্রোডাক্ট ডিলিট হয়েছে');
+        }
+
+        function editProduct(id) {
+            const product = appData.products.find(p => p.id === id);
+            if (!product) return;
+            
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productQuantity').value = product.quantity;
+            document.getElementById('productImage').value = product.image;
+            
+            showAddProductModal();
+            
+            // পুরোনো প্রোডাক্ট ডিলিট করে নতুন করে যোগ করা হবে
+            deleteProduct(id);
+        }
+
+        // সেটিংস
+        function manageSettings() {
+            document.getElementById('workStart').value = appData.settings.workStart;
+            document.getElementById('workEnd').value = appData.settings.workEnd;
+            document.getElementById('otRate').value = appData.settings.overtimeRate;
+            document.getElementById('bonusAmount').value = appData.settings.bonusAmount;
+            document.getElementById('latePenalty').value = appData.settings.latePenaltyDays;
+            document.getElementById('lateSalaryCut').value = appData.settings.lateSalaryCutDays;
+            
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        function saveSettings() {
+            appData.settings = {
+                workStart: document.getElementById('workStart').value,
+                workEnd: document.getElementById('workEnd').value,
+                overtimeRate: parseInt(document.getElementById('otRate').value),
+                bonusAmount: parseInt(document.getElementById('bonusAmount').value),
+                latePenaltyDays: parseInt(document.getElementById('latePenalty').value),
+                lateSalaryCutDays: parseInt(document.getElementById('lateSalaryCut').value)
+            };
+            
+            saveData();
+            closeModal('settingsModal');
+            showNotification('সেটিংস সংরক্ষিত হয়েছে');
+        }
+
+        // এক্সপোর্ট ফাংশন
+        function exportAllData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `textile_backup_${moment().format('YYYYMMDD_HHmmss')}.json`;
+            a.click();
+            showNotification('ব্যাকআপ ডাউনলোড হচ্ছে');
+        }
+
+        function exportTodayAttendance() {
+            const today = moment().format('YYYY-MM-DD');
+            const attendance = appData.attendance.filter(a => a.date === today);
+            
+            const ws = XLSX.utils.json_to_sheet(attendance.map(a => ({
+                'নাম': a.employeeName,
+                'স্ট্যাটাস': a.isLate ? 'লেট' : a.status === 'present' ? 'উপস্থিত' : 'অনুপস্থিত',
+                'প্রবেশ': a.checkIn ? moment(a.checkIn, 'HH:mm:ss').format('hh:mm A') : '-',
+                'প্রস্থান': a.checkOut ? moment(a.checkOut, 'HH:mm:ss').format('hh:mm A') : '-',
+                'ওভারটাইম': a.overtime || 0
+            })));
+            
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
+            XLSX.writeFile(wb, `attendance_${today}.xlsx`);
+            showNotification('এক্সপোর্ট করা হয়েছে');
+        }
+
+        function generateReport() {
+            const reportType = document.getElementById('reportType')?.value || 'attendance';
+            const startDate = document.getElementById('startDate')?.value || moment().subtract(30, 'days').format('YYYY-MM-DD');
+            const endDate = document.getElementById('endDate')?.value || moment().format('YYYY-MM-DD');
+            
+            let data = [];
+            
+            switch(reportType) {
+                case 'attendance':
+                    data = appData.attendance.filter(a => a.date >= startDate && a.date <= endDate);
+                    break;
+                case 'salary':
+                    data = appData.employees.map(e => ({
+                        'নাম': e.name,
+                        'আইডি': e.id,
+                        'বেতন': e.salary,
+                        'বোনাস': appData.settings.bonusAmount,
+                        'মোট': e.salary + appData.settings.bonusAmount
+                    }));
+                    break;
+                case 'overtime':
+                    const otData = {};
+                    appData.attendance.forEach(a => {
+                        if (a.overtime) {
+                            if (!otData[a.employeeName]) otData[a.employeeName] = 0;
+                            otData[a.employeeName] += a.overtime;
+                        }
+                    });
+                    data = Object.entries(otData).map(([name, ot]) => ({
+                        'নাম': name,
+                        'মোট ওভারটাইম': ot,
+                        'ওভারটাইম বেতন': ot * appData.settings.overtimeRate
+                    }));
+                    break;
+            }
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Report');
+            XLSX.writeFile(wb, `${reportType}_report_${moment().format('YYYYMMDD')}.xlsx`);
+            
+            showNotification('রিপোর্ট জেনারেট করা হয়েছে');
+        }
+
+        // ট্যাব নেভিগেশন
+        function showWorkerTab(tab) {
+            document.querySelectorAll('#workerContent .tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(`worker-${tab}-tab`).classList.add('active');
+            
+            document.querySelectorAll('#workerDashboard .bottom-menu-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.bottom-menu-item').classList.add('active');
+        }
+
+        function showOwnerTab(tab) {
+            document.querySelectorAll('#ownerContent .tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(`owner-${tab}-tab`).classList.add('active');
+            
+            document.querySelectorAll('#ownerDashboard .bottom-menu-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.bottom-menu-item').classList.add('active');
+            
+            if (tab === 'attendance') {
+                updateAttendanceTable();
+            } else if (tab === 'employees') {
+                updateEmployeesList();
+            } else if (tab === 'products') {
+                updateProducts();
+            }
+        }
+
+        // মোডাল ফাংশন
+        function showAddEmployeeModal() {
+            document.getElementById('addEmployeeModal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function showNotificationPanel() {
+            const list = document.getElementById('notificationsList');
+            list.innerHTML = appData.notifications.slice(0, 20).map(n => `
+                <div style="padding: 10px; background: ${n.read ? 'var(--light)' : 'white'}; border-radius: 8px; margin-bottom: 6px; border-left: 4px solid ${n.type === 'success' ? 'var(--success)' : n.type === 'error' ? 'var(--danger)' : 'var(--info)'};">
+                    <div style="font-weight: 600; font-size: 0.95rem;">${n.title}</div>
+                    <div style="font-size: 0.85rem; color: var(--gray);">${n.message}</div>
+                    <div style="font-size: 0.75rem; color: var(--gray); margin-top: 4px;">${n.date}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('notificationModal').style.display = 'flex';
+            
+            // সব নোটিফিকেশন রিড হিসেবে মার্ক করুন
+            appData.notifications.forEach(n => n.read = true);
+            saveData();
+        }
+
+        // লগআউট
+        function workerLogout() {
+            currentUser = null;
+            document.getElementById('workerDashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            if (timerInterval) clearInterval(timerInterval);
+            
+            addNotification('লগআউট', 'শ্রমিক লগআউট করেছেন', 'info');
+        }
+
+        function ownerLogout() {
+            currentUser = null;
+            document.getElementById('ownerDashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            
+            addNotification('এডমিন লগআউট', 'এডমিন লগআউট করেছেন', 'info');
+        }
+
+        // ইউটিলিটি ফাংশন
+        function searchEmployees() {
+            const query = document.getElementById('adminSearch')?.value.toLowerCase();
+            const results = document.getElementById('searchResults');
+            
+            if (!query || query.length < 2) {
+                results.innerHTML = '';
+                return;
+            }
+            
+            const matches = appData.employees.filter(e => 
+                e.id.toLowerCase().includes(query) || 
+                e.name.toLowerCase().includes(query) ||
+                e.department.toLowerCase().includes(query)
+            );
+            
+            if (matches.length === 0) {
+                results.innerHTML = '<p style="text-align: center; color: var(--gray);">কোনো কর্মী পাওয়া যায়নি</p>';
+                return;
+            }
+            
+            results.innerHTML = matches.map(emp => {
+                const attendance = appData.attendance.filter(a => a.employeeId === emp.id);
+                const present = attendance.filter(a => a.status === 'present' && !a.isLate).length;
+                
+                return `
+                    <div class="search-result-card" onclick="viewEmployeeDetails('${emp.id}')" style="cursor: pointer; margin-bottom: 8px; padding: 8px; background: var(--light); border-radius: var(--radius-sm);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.95rem;">${emp.name}</div>
+                                <div style="font-size: 0.8rem; color: var(--gray);">${emp.id} | ${emp.department}</div>
+                            </div>
+                            <span class="badge badge-success">${present} দিন</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function changePassword() {
+            const newPass = prompt('নতুন পাসওয়ার্ড দিন:');
+            if (newPass && newPass.length >= 4) {
+                currentUser.data.password = newPass;
+                saveData();
+                showNotification('পাসওয়ার্ড পরিবর্তন হয়েছে');
+            }
+        }
+
+        function updateProfile() {
+            alert('প্রোফাইল আপডেট ফিচার শীঘ্রই আসছে');
+        }
+
+        function exportMyData() {
+            const myData = {
+                profile: currentUser.data,
+                attendance: appData.attendance.filter(a => a.employeeId === currentUser.data.id)
+            };
+            
+            const dataStr = JSON.stringify(myData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `my_data_${currentUser.data.id}_${moment().format('YYYYMMDD')}.json`;
+            a.click();
+            showNotification('আপনার ডাটা ডাউনলোড হচ্ছে');
+        }
+
+        // ডামি ফাংশন (সম্পূর্ণতার জন্য)
+        function downloadSalarySlip() {
+            showNotification('বেতন স্লিপ ডাউনলোড করা হচ্ছে');
+        }
+
+        function generateCustomReport() {
+            generateReport();
+        }
+
+        function editEmployee(id) {
+            showNotification('এডিট ফিচার শীঘ্রই আসছে');
+        }
+
+        function viewProduct(id) {
+            showNotification('প্রোডাক্ট ডিটেইলস শীঘ্রই আসছে');
+        }
+
+        function showNotifications() {
+            showNotificationPanel();
+        }
+
+        // ইনিশিয়ালাইজ
+        document.addEventListener('DOMContentLoaded', () => {
+            moment.locale('bn');
+            loadData();
+            updateProducts();
+            
+            // ডিফল্ট ইউজারনেম সেট
+            document.getElementById('ownerUsername').value = 'tanvir';
+            document.getElementById('ownerPassword').value = 'admin123';
+            
+            // আজকের মাস সেট
+            document.getElementById('historyMonth').value = moment().format('YYYY-MM');
+            
+            // সেটিংস মডালের জন্য ইভেন্ট
+            window.onclick = function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            };
+        });
+    </script>
+</body>
+</html>
